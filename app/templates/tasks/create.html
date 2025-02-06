@@ -1,0 +1,23 @@
+<!-- app/templates/tasks/create.html -->
+{% extends "base.html" %}
+
+{% block title %}Create Task{% endblock %}
+
+{% block content %}
+<h2>Create New Task</h2>
+<form method="post" action="/tasks/create">
+  <div class="mb-3">
+    <label for="title" class="form-label">Task Title</label>
+    <input type="text" class="form-control" id="title" name="title" required>
+  </div>
+  <div class="mb-3">
+    <label for="project" class="form-label">Project</label>
+    <select class="form-select" id="project" name="project_id" required>
+      {% for project in projects %}
+      <option value="{{ project.id }}">{{ project.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button type="submit" class="btn btn-primary">Create</button>
+</form>
+{% endblock %}

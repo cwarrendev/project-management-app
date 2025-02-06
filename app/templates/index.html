@@ -1,0 +1,13 @@
+<!-- app/templates/index.html -->
+{% extends "base.html" %}
+
+{% block title %}Home - Project Management{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+  <h1>Welcome to the Project Management App</h1>
+  <p>Manage your projects and tasks easily.</p>
+  <a class="btn btn-primary" href="/projects/">View Projects</a>
+  <a class="btn btn-secondary" href="/tasks/">View Tasks</a>
+</div>
+{% endblock %}
