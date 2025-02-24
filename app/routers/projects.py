@@ -1,11 +1,10 @@
-# app/routers/projects.py
 from fastapi import APIRouter, Request, Depends, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlmodel import Session, select
 from fastapi.templating import Jinja2Templates
 
-from database import get_session
-from models import Project
+from app.database import get_session  # Updated import
+from app.models import Project  # Updated import if needed
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
