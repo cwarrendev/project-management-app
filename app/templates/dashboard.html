@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2>Dashboard Metrics</h2>
+<!-- Divider -->
+<hr style="margin: 20px 0; margin-top: 50px;">
+
+<!-- Bar Chart Container -->
+<div class="chart-container" style="width:100%; height:400px;">
+    <h5>Total Projects, Total Tasks, and Completed Tasks</h5>
+    <canvas id="metricsChart"></canvas>
+</div>
+
+<!-- Divider -->
+<hr style="margin: 20px 0; border: 1px solid #ccc; margin-top: 50px;">
+
+<!-- Pie Charts Container (side by side) -->
+<div style="display: flex; gap: 20px; margin-top:20px;">
+    <div class="chart-container" style="flex: 1; height:400px;">
+        <h4>Completed and Pending Tasks</h4>
+        <canvas id="tasksPieChart"></canvas>
+    </div>
+    <div class="chart-container" style="flex: 1; height:400px;">
+        <p>Tasks by Project</p>
+        <canvas id="anotherPieChart"></canvas>
+    </div>
+</div>
+
+<!-- Inject the metrics provided by the endpoint -->
+<script>
+    window.dashboardMetrics = {{ metrics | tojson | safe }};
+</script>
+
+<!-- Javascript -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/static/js/dashboard.js"></script>
+{% endblock %}

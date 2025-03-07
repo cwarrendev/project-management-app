@@ -2,16 +2,18 @@ from fastapi import APIRouter, Request, Depends, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlmodel import Session, select
 from fastapi.templating import Jinja2Templates
-
-from app.database import get_session  # Updated import
-from app.models import Project  # Updated import if needed
+from app.auth import current_active_user
+from app.database import get_session
+from app.models.project_models import Project
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/", response_class=HTMLResponse)
-def list_projects(request: Request, session: Session = Depends(get_session)):
+def list_projects(request: Request, session: Session = Depends(get_session), user=Depends(current_active_user)):
+    if user is None:
+        return RedirectResponse(url="/login", status_code=303)
     projects = session.exec(select(Project)).all()
     return templates.TemplateResponse("projects/list.html", {"request": request, "projects": projects})
 
