@@ -31,21 +31,14 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 @app.get("/login", response_class=HTMLResponse)
-def login_page(request: Request, user = Depends(current_active_user)):
-    if user is not None:
-        # If already logged in, go to home page
-        return RedirectResponse(url="/", status_code=303)
+def login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 
 
 
 @app.get("/", response_class=HTMLResponse)
-def read_root(request: Request, user: User | None = Depends(current_active_user)):
-    logging.info(f"User: {user}")
-    if user is None:
-        # If not logged in, redirect to login page
-        return RedirectResponse(url="/login", status_code=303)
+def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 

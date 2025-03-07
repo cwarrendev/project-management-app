@@ -45,8 +45,12 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
         if (response.ok) {
             const data = await response.json();
             console.log("Login successful. Token:", data.access_token);
+            
+            // Store token in localStorage
+            localStorage.setItem("access_token", data.access_token);
+            
+            // Redirect with token in Authorization header
             window.location.href = '/';
-
         } else {
             document.getElementById("loginMessage").innerHTML = 
                 '<div class="alert alert-danger">Login failed. Please check your credentials.</div>';

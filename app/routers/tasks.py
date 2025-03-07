@@ -11,9 +11,7 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/", response_class=HTMLResponse)
-def list_tasks(request: Request, session: Session = Depends(get_session), user=Depends(current_active_user)):
-    if user is None:
-        return RedirectResponse(url="/login", status_code=303)
+def list_tasks(request: Request, session: Session = Depends(get_session)):
     tasks = session.exec(select(Task)).all()
     # If no tasks are found, return an empty list.
     if not tasks:
