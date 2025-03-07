@@ -36,16 +36,17 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     formData.append("password", password);
     
     try {
+        console.log('Sending login request...')
         const response = await fetch("/auth/jwt/login", {
             method: "POST",
             body: formData
         });
+        console.log("Response:", response);
         if (response.ok) {
             const data = await response.json();
-            // Save the token using localStorage (adjust key name as needed)
-            localStorage.setItem("access_token", data.access_token);
-            // Redirect to dashboard
-            window.location.href = "/dashboard";
+            console.log("Login successful. Token:", data.access_token);
+            window.location.href = '/';
+
         } else {
             document.getElementById("loginMessage").innerHTML = 
                 '<div class="alert alert-danger">Login failed. Please check your credentials.</div>';

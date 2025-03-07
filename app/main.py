@@ -6,9 +6,13 @@ from fastapi.templating import Jinja2Templates
 from contextlib import asynccontextmanager
 from app.database import engine, create_db_and_tables
 from app.routers import projects, tasks, dashboard
+from app.routers.user import router as user_router
 from app.auth import fastapi_users, auth_backend, current_active_user
 from app.database import get_session
-from app.models.user_models import UserCreate, UserDB
+from app.models.user_models import UserCreate, UserDB, User
+from typing import Optional
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 
 
@@ -28,13 +32,16 @@ templates = Jinja2Templates(directory="app/templates")
 @app.get("/login", response_class=HTMLResponse)
 def login_page(request: Request, user = Depends(current_active_user)):
     if user is not None:
-        return RedirectResponse(url="/login", status_code=303)
+        # If already logged in, go to home page
+        return RedirectResponse(url="/", status_code=303)
     return templates.TemplateResponse("login.html", {"request": request})
 
 
 @app.get("/", response_class=HTMLResponse)
-def read_root(request: Request, user = Depends(current_active_user)):
+def read_root(request: Request, user: User | None = Depends(current_active_user)):
+    logging.info(f"User: {user}")
     if user is None:
+        # If not logged in, redirect to login page
         return RedirectResponse(url="/login", status_code=303)
     return templates.TemplateResponse("index.html", {"request": request})
 
@@ -44,6 +51,7 @@ def read_root(request: Request, user = Depends(current_active_user)):
 app.include_router(projects.router, prefix="/projects", tags=["Projects"])
 app.include_router(tasks.router, prefix="/tasks", tags=["Tasks"])
 app.include_router(dashboard.router, tags=["Dashboard"])
+app.include_router(user_router, prefix="/users", tags=["Users"])
 
 # Include FastAPI-Users routes
 app.include_router(
