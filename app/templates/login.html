@@ -26,40 +26,37 @@
 </div>
 
 <script>
-document.getElementById("loginForm").addEventListener("submit", async function(e) {
-    e.preventDefault();
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    // fastapi-users expects a field named "username" for login
-    const formData = new FormData();
-    formData.append("username", email);
-    formData.append("password", password);
-    
-    try {
-        console.log('Sending login request...')
-        const response = await fetch("/auth/jwt/login", {
-            method: "POST",
-            body: formData
-        });
-        console.log("Response:", response);
-        if (response.ok) {
-            const data = await response.json();
-            console.log("Login successful. Token:", data.access_token);
-            
-            // Store token in localStorage
-            localStorage.setItem("access_token", data.access_token);
-            
-            // Redirect with token in Authorization header
-            window.location.href = '/';
-        } else {
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const formData = new FormData();
+        formData.append("username", email);
+        formData.append("password", password);
+        
+        try {
+            console.log('Sending login request...')
+            // Updated endpoint for cookie auth
+            const response = await fetch("/auth/cookie/login", {
+                method: "POST",
+                body: formData
+            });
+            console.log("Response:", response);
+            if (response.ok) {
+                // With cookie auth, no need to extract and store token
+                console.log("Login successful!");
+                
+                // Just redirect to dashboard
+                window.location.href = '/dashboard/';
+            } else {
+                document.getElementById("loginMessage").innerHTML = 
+                    '<div class="alert alert-danger">Login failed. Please check your credentials.</div>';
+            }
+        } catch (err) {
+            console.error("Login error:", err);
             document.getElementById("loginMessage").innerHTML = 
-                '<div class="alert alert-danger">Login failed. Please check your credentials.</div>';
+                '<div class="alert alert-danger">An unexpected error occurred.</div>';
         }
-    } catch (err) {
-        console.error("Login error:", err);
-        document.getElementById("loginMessage").innerHTML = 
-            '<div class="alert alert-danger">An unexpected error occurred.</div>';
-    }
-});
+    });
 </script>
 {% endblock %}

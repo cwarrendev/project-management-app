@@ -1,4 +1,4 @@
-from fastapi import Depends, Request, Cookie
+from fastapi import Depends, Request, Cookie, APIRouter
 from fastapi_users import BaseUserManager, FastAPIUsers, UUIDIDMixin
 from fastapi_users.authentication import (
     JWTStrategy,
@@ -51,7 +51,11 @@ async def get_user_manager(user_db: SQLModelUserDatabase = Depends(get_user_db))
     yield UserManager(user_db)
 
 
-bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
+cookie_transport = CookieTransport(
+    cookie_name="projectauth",
+    cookie_max_age=3600,  # 1 hour
+    cookie_secure=False,  # Set to True in production with HTTPS
+)
 
 
 def get_jwt_strategy() -> JWTStrategy:
@@ -61,9 +65,10 @@ def get_jwt_strategy() -> JWTStrategy:
 
 auth_backend = AuthenticationBackend(
     name="jwt",
-    transport=bearer_transport,
+    transport=cookie_transport,
     get_strategy=get_jwt_strategy,
 )
 
 fastapi_users = FastAPIUsers[User, uuid.UUID](get_user_manager, [auth_backend])
 current_active_user = fastapi_users.current_user(optional=True, active=True)
+

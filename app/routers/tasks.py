@@ -11,7 +11,9 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/", response_class=HTMLResponse)
-def list_tasks(request: Request, session: Session = Depends(get_session)):
+def list_tasks(request: Request, session: Session = Depends(get_session), user=Depends(current_active_user)):
+    if user is None:
+        return RedirectResponse(url="/login", status_code=303)
     tasks = session.exec(select(Task)).all()
     # If no tasks are found, return an empty list.
     if not tasks:
@@ -20,7 +22,9 @@ def list_tasks(request: Request, session: Session = Depends(get_session)):
 
 
 @router.get("/create", response_class=HTMLResponse)
-def create_task_form(request: Request, session: Session = Depends(get_session)):
+def create_task_form(request: Request, session: Session = Depends(get_session), user=Depends(current_active_user)):
+    if user is None:
+        return RedirectResponse(url="/login", status_code=303)
     # Retrieve projects so the user can associate the new task with a project.
     projects = session.exec(select(Project)).all()
     return templates.TemplateResponse("tasks/create.html", {"request": request, "projects": projects})
@@ -30,8 +34,11 @@ def create_task_form(request: Request, session: Session = Depends(get_session)):
 def create_task(
     title: str = Form(...),
     project_id: int = Form(...),
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
+    user=Depends(current_active_user)
 ):
+    if user is None:
+        return RedirectResponse(url="/login", status_code=303)
     task = Task(title=title, project_id=project_id)
     session.add(task)
     session.commit()

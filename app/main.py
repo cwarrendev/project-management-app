@@ -38,8 +38,11 @@ def login_page(request: Request):
 
 
 @app.get("/", response_class=HTMLResponse)
-def read_root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+def read_root(request: Request, user=Depends(current_active_user)):
+    if user is None:
+        return RedirectResponse(url="/login", status_code=303)
+    email = user.email
+    return templates.TemplateResponse("index.html", {"request": request, "email": email})
 
 
 
@@ -49,12 +52,16 @@ app.include_router(tasks.router, prefix="/tasks", tags=["Tasks"])
 app.include_router(dashboard.router, tags=["Dashboard"])
 app.include_router(user_router, prefix="/users", tags=["Users"])
 
+
 # Include FastAPI-Users routes
+
 app.include_router(
     fastapi_users.get_auth_router(auth_backend),
-    prefix="/auth/jwt",
-    tags=["auth"]
+    prefix="/auth/cookie",
+    tags=["auth"],
 )
+
+
 app.include_router(
     fastapi_users.get_register_router(UserDB, UserCreate),
     prefix="/auth",
