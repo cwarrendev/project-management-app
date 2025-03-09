@@ -40,10 +40,10 @@ async def create_user(email: str, password: str, first_name: str, last_name: str
 
 if __name__ == "__main__":
     # User details
-    first_name = "Chris"
-    last_name = "Warren"
-    email = "cwarren.dev@gmail.com"
-    password = "test"
+    first_name = ""
+    last_name = ""
+    email = ""
+    password = ""
     
     # Run the async user creation function
     asyncio.run(create_user(email, password, first_name, last_name))
