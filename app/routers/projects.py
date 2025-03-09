@@ -5,7 +5,6 @@ from fastapi.templating import Jinja2Templates
 from app.auth import current_active_user
 from app.database import get_session
 from app.models.project_models import Project
-from app.models.user_models import User
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Depends, Form
+from fastapi import APIRouter, Body, Request, Depends, Form
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from sqlmodel import Session, select
 from fastapi.templating import Jinja2Templates
@@ -20,7 +20,7 @@ def list_tasks(request: Request, session: Session = Depends(get_session), user=D
     # If no tasks are found, return an empty list.
     if not tasks:
         tasks = []
-    return templates.TemplateResponse("tasks/list.html", {"request": request, "tasks": tasks})
+    return templates.TemplateResponse("tasks/list.html", {"request": request, "tasks": tasks, "user": user})
 
 
 @router.get("/create", response_class=HTMLResponse)
@@ -29,7 +29,7 @@ def create_task_form(request: Request, session: Session = Depends(get_session), 
         return RedirectResponse(url="/login", status_code=303)
     # Retrieve projects so the user can associate the new task with a project.
     projects = session.exec(select(Project)).all()
-    return templates.TemplateResponse("tasks/create.html", {"request": request, "projects": projects})
+    return templates.TemplateResponse("tasks/create.html", {"request": request, "projects": projects, "user": user})
 
 
 @router.post("/create")
@@ -57,7 +57,7 @@ class TaskUpdate(BaseModel):
 @router.post("/{task_id}/toggle-completion")
 def toggle_task_completion(
     task_id: int,
-    task_update: TaskUpdate,
+    task_update: TaskUpdate = Body(...),
     session: Session = Depends(get_session),
     user=Depends(current_active_user)
 ):
@@ -70,11 +70,19 @@ def toggle_task_completion(
     # Find the task
     task = session.get(Task, task_id)
     if not task:
+        print(f"Task with ID {task_id} not found")
         return JSONResponse(status_code=404, content={"message": "Task not found"})
     
     # Update the task completion status
     task.completed = task_update.completed
-    session.add(task)
-    session.commit()
+    print(f"Setting task {task_id} completed status to: {task.completed}")
     
-    return JSONResponse(content={"success": True, "completed": task.completed})
+    try:
+        session.add(task)
+        session.commit()
+        print(f"Task updated successfully")
+        return JSONResponse(content={"success": True, "completed": task.completed})
+    except Exception as e:
+        print(f"Error updating task: {e}")
+        session.rollback()
+        return JSONResponse(status_code=500, content={"message": f"Database error: {str(e)}"})

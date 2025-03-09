@@ -22,14 +22,14 @@
       <td>{{ task.title }}</td>
       <td>
         <div class="form-check">
-          <input class="form-check-input task-checkbox" type="checkbox" data-task-id="{{ task.id }}" {% if
+          <input class="form-check-input task-checkbox" disabled type="checkbox" data-task-id="{{ task.id }}" {% if
             task.completed %}checked{% endif %} id="task-{{ task.id }}">
         </div>
       </td>
       <td>{{ task.project_id }}</td>
       <td>
         <button class="btn btn-sm btn-primary"
-          onclick="toggleTaskCompletion({{ task.id }}, {{ task.completed|lower == 'true' }})">
+          onclick="toggleTaskCompletion({{ task.id }}, {{ task.completed|lower }})">
           {% if task.completed %}Mark Incomplete{% else %}Mark Complete{% endif %}
         </button>
       </td>
@@ -41,7 +41,9 @@
     {% endfor %}
   </tbody>
 </table>
+{% endblock %}
 
+{% block scripts %}
 <script>
   function toggleTaskCompletion(taskId, currentStatus) {
     // Invert the current status
@@ -74,7 +76,7 @@
     checkboxes.forEach(checkbox => {
       checkbox.addEventListener('change', function () {
         const taskId = this.getAttribute('data-task-id');
-        toggleTaskCompletion(taskId, !this.checked);
+        toggleTaskCompletion(taskId, this.checked);
       });
     });
   });
