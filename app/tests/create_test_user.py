@@ -39,7 +39,7 @@ async def create_user(email: str, password: str, first_name: str, last_name: str
         print(f"User created successfully with ID: {created_user.id}")
 
 if __name__ == "__main__":
-    # Example email and password
+    # User details
     first_name = "Chris"
     last_name = "Warren"
     email = "cwarren.dev@gmail.com"

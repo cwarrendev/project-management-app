@@ -1,12 +1,11 @@
 # app/database.py
 from sqlmodel import SQLModel, create_engine, Session
+from dotenv import load_dotenv
 import os
+load_dotenv()
 
 # PostgreSQL Database URL
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql+psycopg2://postgres:$urveyt3ch@localhost/project_management_db"
-)
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 engine = create_engine(DATABASE_URL, echo=True)
 

@@ -4,10 +4,47 @@
 {% block title %}Home - Project Management{% endblock %}
 
 {% block content %}
-<div class="jumbotron">
-  <h1>Welcome to the Project Management App</h1>
-  <p>Hi {{ first_name }}, Manage your projects and tasks here.</p>
-  <a class="btn btn-primary" href="/projects/">View Projects</a>
-  <a class="btn btn-secondary" href="/tasks/">View Tasks</a>
+<!-- Hero Section -->
+<div class="hero-section mb-4">
+  <h1 class="display-4">Welcome to Your Project Hub</h1>
+  <p class="lead">Hi <strong>{{ user.first_name }}</strong>, manage all your projects and tasks in one place.</p>
+  <hr class="my-4 bg-light">
 </div>
+
+
+<!-- Action Cards -->
+<div class="row mb-5">
+  <div class="col-md-4 mb-3">
+    <div class="card action-card h-100">
+      <div class="card-body text-center">
+        <div class="card-icon">📊</div>
+        <h5 class="card-title">Dashboard</h5>
+        <p class="card-text">View your project statistics and overall progress.</p>
+        <a href="/dashboard/" class="btn btn-primary">Go to Dashboard</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card action-card h-100">
+      <div class="card-body text-center">
+        <div class="card-icon">📁</div>
+        <h5 class="card-title">Projects</h5>
+        <p class="card-text">Manage and organize all your ongoing projects.</p>
+        <a href="/projects/" class="btn btn-primary">View Projects</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card action-card h-100">
+      <div class="card-body text-center">
+        <div class="card-icon">✓</div>
+        <h5 class="card-title">Tasks</h5>
+        <p class="card-text">Track your tasks and mark them as complete.</p>
+        <a href="/tasks/" class="btn btn-primary">Manage Tasks</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 {% endblock %}

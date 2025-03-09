@@ -38,4 +38,4 @@ def dashboard(request: Request, session: Session = Depends(get_session), user=De
         "completed_tasks": completed_tasks,
         "tasks_by_project": tasks_by_project
     }
-    return templates.TemplateResponse("dashboard.html", {"request": request, "metrics": metrics})
+    return templates.TemplateResponse("dashboard.html", {"request": request, "metrics": metrics, "user": user})

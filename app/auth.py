@@ -16,15 +16,20 @@ from typing import Optional
 from dotenv import load_dotenv
 import os
 
+# Load environment variables
 load_dotenv()
 
+# Create a CryptContext instance
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def get_password_hash(password: str) -> str:
+    '''
+    Get the password hash
+    '''
     return pwd_context.hash(password)
 
-
+# Get the secret key from the environment
 SECRET = os.getenv("SECRET")
 
 

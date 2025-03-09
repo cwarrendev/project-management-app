@@ -36,14 +36,13 @@
         
         try {
             console.log('Sending login request...')
-            // Updated endpoint for cookie auth
+            // Endpoint for cookie-based login
             const response = await fetch("/auth/cookie/login", {
                 method: "POST",
                 body: formData
             });
             console.log("Response:", response);
             if (response.ok) {
-                // With cookie auth, no need to extract and store token
                 console.log("Login successful!");
                 
                 // Redirect to home page
