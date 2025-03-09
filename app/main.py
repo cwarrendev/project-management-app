@@ -50,7 +50,7 @@ async def custom_logout():
     return response
 
 @app.get("/", response_class=HTMLResponse)
-def read_root(request: Request, session: Session = Depends(get_session), user=Depends(current_active_user)):
+def read_root(request: Request, user=Depends(current_active_user)):
     if user is None:
         return RedirectResponse(url="/login", status_code=303)
     
