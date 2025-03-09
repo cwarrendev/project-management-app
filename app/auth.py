@@ -13,6 +13,10 @@ from app.database import get_session
 from passlib.context import CryptContext
 import uuid
 from typing import Optional
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -21,7 +25,7 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-SECRET = "YOUR_SECRET_KEY"
+SECRET = os.getenv("SECRET")
 
 
 # Create a separate function to get user_db

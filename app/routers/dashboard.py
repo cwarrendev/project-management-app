@@ -29,7 +29,7 @@ def dashboard(request: Request, session: Session = Depends(get_session), user=De
     for project in projects:
         count = session.exec(
             select(func.count(Task.id)).where(Task.project_id == project.id)
-        ).one()  # returns an int
+        ).one()  # Returns an int
         tasks_by_project[project.name] = count
 
     metrics = {
